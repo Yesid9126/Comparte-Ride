@@ -1,0 +1,11 @@
+# PRECAUTION: avoid production dependencies that aren't in development
+
+-r ./base.txt
+
+gunicorn==20.0.4
+
+# Static files
+django-storages[boto3]==1.10  # esta es la conexion a amazon para la media cargarla a amazon
+
+# Email
+django-anymail[mailgun]==7.2.1   # dependencia para el envio de emails
