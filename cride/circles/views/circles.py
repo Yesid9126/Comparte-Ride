@@ -45,7 +45,7 @@ class CircleViewSet(viewsets.ModelViewSet):
         return queryset
 
 # vamos a poner la funcionalidad para cuando se cree un circulo, el miembro que lo creo
-# sea el administrador, ademas pondremos si el circulo tiene limite se debe indicar
+# sea el administrador, ademas pondremos si el circulo tiene limite se debe indicar cual es
 # vamos a buscar un metodo para sobreescribir,en la documentacion de ModelViewset
 # utilizaremos la clase de createmodelmixin para crear un circulo
     def perform_create(self, serializer):
@@ -54,7 +54,7 @@ class CircleViewSet(viewsets.ModelViewSet):
         # salvamos el serializer del circulo, despues de que haya validado todos los datos
         user = self.request.user
         # traemos el usuario que esta en el login y que creara el circulo y lo asignamos a campo user
-        profile = self.user.profile
+        profile = user.profile
         # a la variable profile le enviamos el perfil de usuario que creara el circulo
         Membership.objects.create(
             user= user,

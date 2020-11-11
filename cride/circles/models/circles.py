@@ -26,7 +26,7 @@ class Circle(CRideModel):
         #lo hacemos a tra ves de :
          through='circles.Membership',
          # a traves de que campos se hace la relacion al usuario
-         through_fields= ('circles', 'user')
+         through_fields= ('circle', 'user')
          )
 # cuando utilizamos el modelo de membership saldra un error ya que tenemos varias llaves
 # foraneas(foreingkey) debemos especificar cual usar

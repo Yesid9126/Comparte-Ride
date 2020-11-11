@@ -15,7 +15,7 @@ class Membership(CRideModel):
 
     user = models.ForeignKey('users.User', on_delete=models.CASCADE)
     profile = models.ForeignKey('users.Profile', on_delete=models.CASCADE)
-    circles = models.ForeignKey('circles.Circle', on_delete=models.CASCADE)
+    circle = models.ForeignKey('circles.Circle', on_delete=models.CASCADE)
 
     is_admin= models.BooleanField(
         'circle admin',
@@ -28,7 +28,8 @@ class Membership(CRideModel):
     remaining_invitations = models.PositiveIntegerField(default=0)
     invited_by= models.ForeignKey(
         'users.User',
-        null=True, on_delete=models.SET_NULL,
+        null=True, 
+        on_delete=models.SET_NULL,
         related_name='invited_by',
 # cuando se tienen dos campos que son llave foranea en la DB que referencian al mismo modelo
 # se debe definir el related_name
@@ -47,7 +48,7 @@ class Membership(CRideModel):
 
     def __str__(self):
         """Return username and circle."""
-        return '@ {} at # {}'. format(
+        return '@ {} at # {}'.format(
             self.user.username,
             self.circle.slug_name,
         )
