@@ -1,6 +1,6 @@
 # vamos a extender el modelo de usuario que trae Django por Default
-# utilizamos el atributo OneToOneField
-# usamos un modelo personalizado Django
+# utilizamos el atributo OneToOneField para que cada campo sea unico
+# usamos un modelo personalizado el cual se usa con clase bastracta o con modelo proxy
 
 #Django
 from django.db import models

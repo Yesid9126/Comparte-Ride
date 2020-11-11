@@ -19,6 +19,17 @@ class Circle(CRideModel):
     about = models.CharField('circles description',max_length= 255)
     # esta es la descripcion del grupo
     picture= models.ImageField(upload_to ='circles/pictures/', blank= True, null=True)
+# manytomany nos sirve para referenciar un campo con otro modelo
+    members = models.ManyToManyField(
+        # la referencia es a:
+        'users.User',
+        #lo hacemos a tra ves de :
+         through='circles.Membership',
+         # a traves de que campos se hace la relacion al usuario
+         through_fields= ('circles', 'user')
+         )
+# cuando utilizamos el modelo de membership saldra un error ya que tenemos varias llaves
+# foraneas(foreingkey) debemos especificar cual usar
 
     # estadisticas por cada circulo(rides tomados y ofrecidos)
     rides_offered = models.PositiveIntegerField(default=0)

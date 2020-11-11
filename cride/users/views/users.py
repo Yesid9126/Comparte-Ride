@@ -8,12 +8,15 @@ from rest_framework import status
 # importamos los status para ser usados en este caso HTTP_201_CREATED
 
 # Serializers
-from cride.users.serializers import UserLoginSerializer ,UserModelSerializer,UserSingUpSerializer
+from cride.users.serializers import (
+    UserLoginSerializer ,UserModelSerializer,UserSingUpSerializer,
+    AccountVerificationSerializer,
+)
 
 # vista para hacer login
 class UserLoginAPIView(APIView):
-
 # reescribimos el metodo post (enviaremos datos , un token) para poder crear el token
+# los token nos permiten la autorizacion a la vista
     def post(self, request, *args, **kwargs):
         serializer = UserLoginSerializer(data = request.data)
         # este token recibe y maneja las peticiones HTTP POST
@@ -28,7 +31,7 @@ class UserLoginAPIView(APIView):
             'user':UserModelSerializer(user).data,
             # serializer puede recibir una instancia de un objeto y mostrarlo
             # aca mostraria todos los datos del user definidos en el UserModelSerializer
-            'token': token
+            'access token': token
         }
 
         return Response (data, status=status.HTTP_201_CREATED)
@@ -40,5 +43,15 @@ class UserSingUpAPIView(APIView):
         serializer = UserSingUpSerializer(data = request.data)
         serializer.is_valid(raise_exception= True)
         user = serializer.save()
-        data ={UserModelSerializer(user).data}
+        data = UserModelSerializer(user).data
         return Response (data, status=status.HTTP_201_CREATED)
+
+# vista para verificar la cuenta
+class AccountVerificationAPIView(APIView):
+    """Account verification."""
+    def post(self, request, *args, **kwargs):
+        serializer = AccountVerificationSerializer(data = request.data)
+        serializer.is_valid(raise_exception= True)
+        serializer.save()
+        data = {'message':'Congratulations, Welcome CRIDE'}
+        return Response (data, status=status.HTTP_200_OK)

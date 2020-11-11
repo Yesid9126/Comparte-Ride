@@ -11,6 +11,7 @@ from cride.utils.models import CRideModel
 class Profile(CRideModel):
     """ este sera el perfil de usuario"""
     user = models.OneToOneField('users.User', on_delete= models.CASCADE)
+    # el primer atributo de un OneToOneField es la clase de la cual heredara
     # este campo nos validara que usuario esta usando el modelo de perfil
     # los campos tipo OneToOneFIeld y Foreignkey deben tener el atributo on_delete
     picture = models.ImageField(

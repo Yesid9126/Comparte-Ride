@@ -185,10 +185,20 @@ CELERYD_TASK_SOFT_TIME_LIMIT = 60
 
 # Django REST framework
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
+    'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         # se analiza si el formato es Json, en caso de que no sea Json salta la siguiente linea
         #'rest_framework.renderers.BrowsableAPIRenderer',
         # este recibe cualquier tipo de formato
-    ]
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        # importamos la autenticacion por token para autorizar el acceso a las vistas
+        # en este caso utiizaremos para la vista de circulos
+    ),
+    'DEFAULT_PAGINATION_CLASS': 
+        'rest_framework.pagination.LimitOffsetPagination',
+        'PAGE_SIZE': 3,
+    
+
 }
