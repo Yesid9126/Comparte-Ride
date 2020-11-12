@@ -41,7 +41,7 @@ class Membership(CRideModel):
     #Status
     is_activate = models.BooleanField(
         'active status',
-        default=True,
+        default=False,
         help_text='only active users are allowed to interactive in the circle'
     )
 # validamos si el miembro dejo de ser parte del circulo

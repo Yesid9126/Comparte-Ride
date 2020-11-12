@@ -1,4 +1,4 @@
-"""Cricles Serializers"""
+"""Circles Serializers"""
 """ vamos a crear los serializers de los circulos con el ModelSerializer, esto nos permitira
 validar campos, crear, listar y modificar circulos"""
 # Django REST framework
@@ -7,7 +7,8 @@ from rest_framework import serializers
 # Model
 from cride.circles.models import Circle
 
-# este serializer lista y crea serializers
+# este serializer lista y crea circulos
+
 class CircleModelSerializer(serializers.ModelSerializer):
     """Circle Model Serializer."""
     member_limit = serializers.IntegerField(
@@ -22,7 +23,7 @@ class CircleModelSerializer(serializers.ModelSerializer):
         model = Circle
         # utilizamos los campos definidos en el modelo de circulos
         fields=(
-            'id','name','slug_name','about',
+            'name','slug_name','about',
             'picture', 'rides_offered',
             'rides_taken','verified','is_public',
             'is_limited','member_limit'
