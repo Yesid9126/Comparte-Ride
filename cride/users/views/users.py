@@ -17,6 +17,7 @@ from rest_framework.permissions import (
 from cride.users.permissions import IsAccountOwner
 
 # Serializers
+from cride.users.serializers.profiles import ProfileModelSerializer
 from cride.circles.serializers import CircleModelSerializer
 from cride.users.serializers import (
     UserLoginSerializer ,UserModelSerializer,UserSingUpSerializer,
@@ -71,7 +72,7 @@ class UserViewSet(mixins.RetrieveModelMixin,
     # reemplazamos este metodo por la vista anterior para login
     def login(self, request):
         """User Login"""
-        
+        import pdb; pdb.set_trace()
         serializer = UserLoginSerializer(data = request.data)
         # el serializer contiene todos los datos del login y los valida
         serializer.is_valid(raise_exception= True)

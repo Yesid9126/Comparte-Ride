@@ -17,6 +17,9 @@ from  rest_framework.authtoken.models import Token
 # importamos el token authentication
 from rest_framework.validators import UniqueValidator
 
+# Serializer
+from cride.users.serializers.profiles import ProfileModelSerializer
+
 # Models
 from cride.users.models import User, Profile
 
@@ -28,6 +31,9 @@ from datetime import timedelta
 # creamos un serializer basado en el modelo de usuario de Django
 class UserModelSerializer(serializers.ModelSerializer):
     """User Model Serializer"""
+    # vamos a redefinir el campo profile para traer la picture y biography
+    # definiremos los atributos que vamos a mostrar en el serializer
+    profile= ProfileModelSerializer(read_only=True)
     class Meta:
         """Meta Class"""
         model = User
@@ -38,6 +44,8 @@ class UserModelSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'phone_number',
+            # usaremos una referencia hacia el profile
+            'profile',
         )
         # definiremos los atributos de nuestro serializer
 # serializer para verificar los datos del SingUp

@@ -24,7 +24,7 @@ class Profile(CRideModel):
     )
     # podemos usar imagenes ya que tenemos pillow instalado(requeriments)
 
-    byography = models.TextField(max_length= 500, blank= True)
+    biography = models.TextField(max_length= 500, blank= True)
 
     # vamos a crear las estadisticas para cada perfil de usuario
     # cuantos rides ha tomado
