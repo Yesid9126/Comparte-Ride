@@ -1,0 +1,6 @@
+file:/home/yesid/.gitconfig	user.name=yesid
+file:/home/yesid/.gitconfig	user.email=yesidf26@gmail.com
+file:.git/config	core.repositoryformatversion=0
+file:.git/config	core.filemode=true
+file:.git/config	core.bare=false
+file:.git/config	core.logallrefupdates=true

@@ -35,7 +35,7 @@ from cride.circles.models import Circle
 
 class UserViewSet(mixins.RetrieveModelMixin,
                   mixins.UpdateModelMixin,  
-                  viewsets.GenericViewSet,):
+                  viewsets.GenericViewSet):
     """User Viewset.
     
     Handle Singup, login an Account verification.
@@ -54,10 +54,11 @@ class UserViewSet(mixins.RetrieveModelMixin,
 # haremos que solo el usuario pueda acceder a su detalle de usuario
     def get_permissions(self):
         """Assing permissions based on action"""
-        if self.action in ['singup', 'login', 'verify']:
+        
+        if self.action in ['signup', 'login', 'verify']:
             permissions =[AllowAny]
-    # cualquiera que vaya a acceder a estas peticiones lo podra hacer
-# si la accion es de tipo retrieve se debe validar el permiso de acceso
+        # cualquiera que vaya a acceder a estas peticiones lo podra hacer
+        # si la accion es de tipo retrieve se debe validar el permiso de acceso
         elif self.action in ['retrieve', 'update', 'partial_update']:
             permissions = [IsAuthenticated, IsAccountOwner]
         else:
@@ -72,7 +73,6 @@ class UserViewSet(mixins.RetrieveModelMixin,
     # reemplazamos este metodo por la vista anterior para login
     def login(self, request):
         """User Login"""
-        import pdb; pdb.set_trace()
         serializer = UserLoginSerializer(data = request.data)
         # el serializer contiene todos los datos del login y los valida
         serializer.is_valid(raise_exception= True)
@@ -90,10 +90,10 @@ class UserViewSet(mixins.RetrieveModelMixin,
             'access token': token
         }
         return Response (data, status=status.HTTP_201_CREATED)
-# status viene de la documentacion de status del codigo 201, debemos importar status
-
-    @action(detail= False, methods=['post'])
-    def signup (self, request):
+        # status viene de la documentacion de status del codigo 201, debemos importar status
+    
+    @action(detail=False, methods=['post'])
+    def signup(self, request):
         """User signup."""
         serializer = UserSingUpSerializer(data = request.data)
         serializer.is_valid(raise_exception= True)

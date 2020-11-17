@@ -4,12 +4,12 @@
 from django.conf import settings
 from django.contrib.auth import authenticate, password_validation
 # traemos este metodo para autenticar los campos de login
-from django.core.mail import EmailMultiAlternatives
-# importamos la propiedad de django para enviar emails de confirmacion alternativos (en este caso emails html)
+
+# validador de phone_number
 from django.core.validators import RegexValidator
-# importamos esta propiedas que nos ayuda a renderear un template con sus propiedades
-from django.template.loader import render_to_string
-from django.utils import timezone
+
+# Tasks
+from cride.taskapp.tasks import send_confirmation_email
 
 # Django RF
 from rest_framework import serializers
@@ -23,9 +23,10 @@ from cride.users.serializers.profiles import ProfileModelSerializer
 # Models
 from cride.users.models import User, Profile
 
-#Utilies
+# Utilies
 import jwt
 from datetime import timedelta
+
 
 # crearemos nuestro primer model form serializer(buscar informacion de para que es este)
 # creamos un serializer basado en el modelo de usuario de Django
@@ -91,6 +92,12 @@ class UserSingUpSerializer(serializers.Serializer):
         # queremos que django valide el password las demas validaciones van por serializers
         password_validation.validate_password(passwd)
         return data
+
+############ las funciones que teniamos de envio de email y generacion de token, las pasamos
+############ a una tarea de celery, realizamos sus imports y esta tarea queda asociada al
+############ serializerr de singup...................
+
+
 # al momento de crear el usuario tambien se crea el perfil
     def create(self, data):
         """Handle user and profile creation."""
@@ -100,46 +107,14 @@ class UserSingUpSerializer(serializers.Serializer):
         # creamos un usuario en el objeto del model User
         Profile.objects.create(user=user)
         # creamos un perfil con la informacion del usuario
-        self.send_confirmation_email(user)
+        send_confirmation_email.delay(user_pk=user.pk)
+        # send_email es una tarea que creamos en celery, pero para poder llamar la funcion
+        # con sus valores debemos usar el metodo .delay() que indica que es una tarea async
+        # y permite enviar algunos argumentos
         # usamos este metodo para verificar el email haciendo uso del usuario
         return user
     
-    def send_confirmation_email(self, user):
-        """Send account Verification link yo given user"""
-        verification_token= self.gen_verification_token(user)
-        # la variable verification_token: contiene el token de verificacion de la funcion
-        # gen_verification_token, este token de verificacion lo generamos con JWT
-        
-        # estos campos provienen de la clae EmailMultivariable(revisar doc)         
-        subject= 'Welcome @{}! Verify your account to start using comparte ride'.format(user.username)
-        from_email= 'Comparte Ride <noreply@comparteride.com>'
-        # este campo nos ayuda a rfenderear el template del html para el email
-        content = render_to_string(
-            # aca vivira el template, usamos un template para el envio de email
-            'emails/users/account_verification.html',
-            # enviamos como contexto el token del usuario
-            {'token': verification_token, 'user':user}
-        )
-        msg = EmailMultiAlternatives(subject, content, from_email, [user.email])
-        # se envia un mensaje con los datos indicados
-        msg.attach_alternative(content, "text/html")
-        # agrega el html
-        msg.send()
-        # envia
-    # crearemos nuestro token con jwt que recibe: jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256')
-    def gen_verification_token(self, user):
-        """Create JWT token that the user can use verify  its account"""
-        # utilizaremos expiracion de token, el token dura 15 dias.
-        exp_date = timezone.now() + timedelta(days=15)
-        payload={
-            'user': user.username,
-            'exp': int(exp_date.timestamp()),
-            'type': 'email_confirmation',
-        }
-        token= jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
-
-        return token.decode()
-        # retornamos el token y lo transformamos de bits a string
+    
 
 # creamos este serializer para la verificacion de la cuenta
 class AccountVerificationSerializer(serializers.Serializer):

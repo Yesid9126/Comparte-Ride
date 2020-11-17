@@ -169,6 +169,8 @@ ADMINS = [
 MANAGERS = ADMINS
 
 # Celery
+# agregamos la aplicacion de celery para poder gestionar las tareas
+# se configuran las funcionalidades de celery
 INSTALLED_APPS += ['cride.taskapp.celery.CeleryAppConfig']
 if USE_TZ:
     CELERY_TIMEZONE = TIME_ZONE
@@ -179,6 +181,7 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERYD_TASK_TIME_LIMIT = 5 * 60
 CELERYD_TASK_SOFT_TIME_LIMIT = 60
+
 
 # para utilizar los renderers debemos importar las siguientes lineas para indicar al render
 # como funcionar , los renders reciben cualquier tipo de formato

@@ -9,13 +9,13 @@ from cride.circles.models import Membership
 # Serializers
 from cride.users.serializers import UserModelSerializer
 
-
+# con esta clase crearemos y haremos update de los miembros
 class MembershipModelSerializer(serializers.ModelSerializer):
     """Member model serializer"""
 
     joined_at = serializers.DateTimeField(source='created',read_only=True)
     user = UserModelSerializer(read_only=True)
-# este usuario tendra las propiedades del usemodelserializer, que a su vez tiene asignado
+# este usuario tendra las propiedades del usemodelserializer, que a su vez tiene asignado el perfil
 
     invited_by = serializers.StringRelatedField()
 # vamos a traer el username de la persona que envio la invitacion(el username ya tiene representacion en string) para esto vamos a usar

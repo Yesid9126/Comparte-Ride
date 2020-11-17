@@ -42,5 +42,6 @@ INSTALLED_APPS += ['django_extensions']  # noqa F405
 # instalamos django-extensions que nos permite extender las capacidades de django
 
 # Celery
+# propiedades de las tareas
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True

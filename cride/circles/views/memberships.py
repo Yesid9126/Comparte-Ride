@@ -10,8 +10,16 @@ from cride.circles.models import Circle, Membership
 # Serializers
 from cride.circles.serializers import MembershipModelSerializer
 
+# Permissions
+from rest_framework.permissions import IsAuthenticated
+from cride.circles.permissions import IsActiveCircleMember
 
-class MembershipViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
+
+class MembershipViewSet(mixins.ListModelMixin,
+                        mixins.RetrieveModelMixin,
+                        mixins.DestroyModelMixin,
+                        viewsets.GenericViewSet,
+):
     # el circulo no viene en la url, el circulo (slug_name) esta en el primer nivel de la url
     # y deberia estar en todas las demas
     """Circulo Membership View Set"""
@@ -38,4 +46,28 @@ class MembershipViewSet(mixins.ListModelMixin,viewsets.GenericViewSet):
             circle= self.circle,
             is_activate=True,
         )
+# reescribiremos el metodo get_permissions para asignar los permisos de acceso a cada accion
+# en este caso de que se quiera eliminar miembros del circulo, solo lo podra hacer el admin
+    def get_permissions(self):
+        """Assing permission based on action"""
+        permissions = [IsAuthenticated, IsActiveCircleMember]
+        return [p() for p in permissions]
+
+# reescribimos el metodo get_objects, para traer el objecto atra ves del username y no del pk
+    def get_object(self):
+        """return the circle member by using the user's username"""
+        return get_object_or_404(
+            Membership,
+            user__username= self.kwargs['pk'],
+            circle = self.circle,
+            is_activate= True,
+        )
+
+# esta accion nos permite desactivar el miembro del circulo y asi no podra acceder al detalle    
+    def perform_destroy(self, instance):
+        instance.is_activate= False
+        instance.save()
+# cuando se elimina un detalle de usuario del circulo, lo que hacemos en este metodo
+# es poner al usuario inactivo, lo quehara que no tenga permisos de acceder al circulo
+
     
